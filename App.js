@@ -7,6 +7,8 @@ import { StyleSheet, Text, View } from "react-native";
 import LoggedOutNav from "./navigators/LoggedOutNav";
 import { NavigationContainer } from "@react-navigation/native";
 import * as SplashScreen from "expo-splash-screen";
+import { ApolloProvider } from "@apollo/client";
+import client from "./apollo.js";
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
@@ -48,8 +50,10 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      <LoggedOutNav onLayoutRootView={onLayoutRootView} />
-    </NavigationContainer>
+    <ApolloProvider client={client}>
+      <NavigationContainer>
+        <LoggedOutNav onLayoutRootView={onLayoutRootView} />
+      </NavigationContainer>
+    </ApolloProvider>
   );
 }
