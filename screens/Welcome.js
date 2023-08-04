@@ -2,6 +2,8 @@ import React from "react";
 import { TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 import { colors } from "../colors";
+import AuthLayout from "../components/auth/AuthLayout";
+import AuthButton from "../components/auth/AuthButton";
 
 const Container = styled.View`
   flex: 1;
@@ -40,14 +42,15 @@ export default function Welcome({ navigation }) {
   const goToCreateAccount = () => navigation.navigate("CreateAccount");
   const goToLogin = () => navigation.navigate("Login");
   return (
-    <Container>
-      <Logo resizeMode="contain" source={require("../assets/logo.png")} />
-      <CreateAccount disabled={false} onPress={goToCreateAccount}>
-        <CreateAccountText>Create New Account</CreateAccountText>
-      </CreateAccount>
+    <AuthLayout>
+      <AuthButton
+        disabled={false}
+        onPress={goToCreateAccount}
+        text="Create New Account"
+      />
       <TouchableOpacity onPress={goToLogin}>
         <LoginLink>Log In</LoginLink>
       </TouchableOpacity>
-    </Container>
+    </AuthLayout>
   );
 }
