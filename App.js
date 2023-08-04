@@ -1,55 +1,41 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { StatusBar } from "expo-status-bar";
+import { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import * as Font from "expo-font";
 import { Asset } from "expo-asset";
+import * as Font from "expo-font";
 import LoggedOutNav from "./navigators/LoggedOutNav";
 import { NavigationContainer } from "@react-navigation/native";
-import * as SplashScreen from "expo-splash-screen";
 import { ApolloProvider, useReactiveVar } from "@apollo/client";
-import client, { isLoggedInVar } from "./apollo";
+import client, { isLoggedInVar, tokenVar } from "./apollo";
 import LoggedInNav from "./navigators/LoggedInNav";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function App() {
-  const [appIsReady, setAppIsReady] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const onFinish = () => setLoading(false);
   const isLoggedIn = useReactiveVar(isLoggedInVar);
 
+  const preloadAssets = async () => {
+    const fontsToLoad = [Ionicons.font];
+    const fontPromises = fontsToLoad.map((font) => Font.loadAsync(font));
+    const imagesToLoad = [require("./assets/logo.png")];
+    const imagePromises = imagesToLoad.map((image) => Asset.loadAsync(image));
+    return Promise.all([...fontPromises, ...imagePromises]);
+  };
+
+  const preload = async () => {
+    const token = await AsyncStorage.getItem("token");
+    if (token) {
+      isLoggedInVar(true);
+      tokenVar(token);
+    }
+    return preloadAssets();
+  };
   useEffect(() => {
-    async function prepare() {
-      try {
-        await SplashScreen.preventAutoHideAsync();
-
-        const fontsToLoad = [Ionicons.font];
-        const fontPromises = fontsToLoad.map((font) => Font.loadAsync(font));
-        const imagesToLoad = [
-          require("./assets/logo.png"),
-          "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Instagram_logo.svg/840px-Instagram_logo.svg.png",
-        ];
-        const imagePromises = imagesToLoad.map((image) =>
-          Asset.loadAsync(image)
-        );
-        await Promise.all([...fontPromises, ...imagePromises]);
-      } catch (e) {
-        console.warn(e);
-      } finally {
-        setAppIsReady(true);
-        SplashScreen.hideAsync();
-      }
-    }
-
-    prepare();
+    preload().then(onFinish);
   }, []);
-
-  const onLayoutRootView = useCallback(async () => {
-    if (appIsReady) {
-      await SplashScreen.hideAsync();
-    }
-  }, [appIsReady]);
-
-  if (!appIsReady) {
+  if (loading) {
     return null;
   }
-
   return (
     <ApolloProvider client={client}>
       <NavigationContainer>
