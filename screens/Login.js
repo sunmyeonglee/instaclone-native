@@ -4,7 +4,7 @@ import { TextInput } from "../components/auth/AuthShared";
 import { useForm } from "react-hook-form";
 import AuthButton from "../components/auth/AuthButton";
 import { gql, useMutation } from "@apollo/client";
-import { isLoggedInVar } from "../apollo";
+import { isLoggedInVar, logUserIn } from "../apollo";
 
 const LOGIN_MUTATION = gql`
   mutation login($username: String!, $password: String!) {
@@ -24,12 +24,12 @@ const Login = ({ route: { params } }) => {
     },
   });
   const passwordRef = useRef();
-  const onCompleted = (data) => {
+  const onCompleted = async (data) => {
     const {
       login: { ok, token },
     } = data;
     if (ok) {
-      isLoggedInVar(true);
+      await logUserIn(token);
     }
   };
   const [logInMutation, { loading }] = useMutation(LOGIN_MUTATION, {
