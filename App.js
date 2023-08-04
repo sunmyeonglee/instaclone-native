@@ -3,15 +3,16 @@ import { StatusBar } from "expo-status-bar";
 import { Ionicons } from "@expo/vector-icons";
 import * as Font from "expo-font";
 import { Asset } from "expo-asset";
-import { StyleSheet, Text, View } from "react-native";
 import LoggedOutNav from "./navigators/LoggedOutNav";
 import { NavigationContainer } from "@react-navigation/native";
 import * as SplashScreen from "expo-splash-screen";
-import { ApolloProvider } from "@apollo/client";
-import client from "./apollo.js";
+import { ApolloProvider, useReactiveVar } from "@apollo/client";
+import client, { isLoggedInVar } from "./apollo";
+import LoggedInNav from "./navigators/LoggedInNav";
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
+  const isLoggedIn = useReactiveVar(isLoggedInVar);
 
   useEffect(() => {
     async function prepare() {
@@ -52,7 +53,7 @@ export default function App() {
   return (
     <ApolloProvider client={client}>
       <NavigationContainer>
-        <LoggedOutNav onLayoutRootView={onLayoutRootView} />
+        {isLoggedIn ? <LoggedInNav /> : <LoggedOutNav />}
       </NavigationContainer>
     </ApolloProvider>
   );
