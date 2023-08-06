@@ -4,7 +4,7 @@ import { TextInput } from "../components/auth/AuthShared";
 import { useForm } from "react-hook-form";
 import AuthButton from "../components/auth/AuthButton";
 import { gql, useMutation } from "@apollo/client";
-import { isLoggedInVar, logUserIn } from "../apollo";
+import { logUserIn } from "../apollo";
 
 const LOGIN_MUTATION = gql`
   mutation login($username: String!, $password: String!) {

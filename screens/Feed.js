@@ -1,7 +1,8 @@
 import React from "react";
 import { Text, View } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
-const Feed = () => {
+const Feed = ({ navigation }) => {
   return (
     <View
       style={{
@@ -11,7 +12,9 @@ const Feed = () => {
         justifyContent: "center",
       }}
     >
-      <Text style={{ color: "white" }}>Feed</Text>
+      <TouchableOpacity onPress={() => navigation.navigate("Photo")}>
+        <Text style={{ color: "white" }}>Photo</Text>
+      </TouchableOpacity>
     </View>
   );
 };
