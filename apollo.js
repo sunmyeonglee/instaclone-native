@@ -1,4 +1,10 @@
-import { ApolloClient, InMemoryCache, makeVar } from "@apollo/client";
+import {
+  ApolloClient,
+  InMemoryCache,
+  createHttpLink,
+  makeVar,
+} from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const isLoggedInVar = makeVar(false);
@@ -13,8 +19,29 @@ export const logUserIn = async (token) => {
   tokenVar(token);
 };
 
-const client = new ApolloClient({
+const TOKEN = "token";
+
+export const logUserOut = async () => {
+  await AsyncStorage.multiRemove([TOKEN]);
+  isLoggedInVar(false);
+  tokenVar(null);
+};
+
+const httpLink = createHttpLink({
   uri: "https://a0df-124-5-112-73.ngrok-free.app/graphql",
+});
+
+const authLink = setContext((_, { headers }) => {
+  return {
+    headers: {
+      ...headers,
+      token: tokenVar(),
+    },
+  };
+});
+
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 });
 
