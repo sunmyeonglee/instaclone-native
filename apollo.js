@@ -6,15 +6,15 @@ export const tokenVar = makeVar("");
 
 export const logUserIn = async (token) => {
   await AsyncStorage.multiSet([
-    ["token", JSON.stringify(token)],
-    ["loggedIn", JSON.stringify("yes")],
+    ["token", token],
+    ["loggedIn", "yes"],
   ]);
   isLoggedInVar(true);
   tokenVar(token);
 };
 
 const client = new ApolloClient({
-  uri: "https://bfd3-124-5-112-73.ngrok-free.app/graphql",
+  uri: "https://a0df-124-5-112-73.ngrok-free.app/graphql",
   cache: new InMemoryCache(),
 });
 
