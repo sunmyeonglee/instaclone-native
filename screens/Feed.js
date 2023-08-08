@@ -1,11 +1,11 @@
-import React from "react";
-import { Text, View } from "react-native";
-import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
-import { logUserOut } from "../apollo";
 import { gql, useQuery } from "@apollo/client";
-import { COMMENT_FRAGMENT, PHOTO_FRAGMENT } from "../fragments";
-import ScreenLayout from "../components/ScreenLayout";
+import React from "react";
+import { useState } from "react";
+import { FlatList, Text, View } from "react-native";
 import Photo from "../components/Photo";
+import ScreenLayout from "../components/ScreenLayout";
+import { COMMENT_FRAGMENT, PHOTO_FRAGMENT } from "../fragments";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const FEED_QUERY = gql`
   query seeFeed {
@@ -27,15 +27,26 @@ const FEED_QUERY = gql`
   ${COMMENT_FRAGMENT}
 `;
 
-const Feed = ({ navigation }) => {
-  const { data, loading } = useQuery(FEED_QUERY);
+export default function Feed() {
+  const { data, loading, refetch } = useQuery(FEED_QUERY);
   const renderPhoto = ({ item: photo }) => {
     return <Photo {...photo} />;
   };
-
+  const refresh = async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  };
+  const [refreshing, setRefreshing] = useState(false);
   return (
     <ScreenLayout loading={loading}>
+      {/* <TouchableOpacity onPress={() => logUserOut()}>
+        <Text style={{ color: "white" }}>Log out</Text>
+      </TouchableOpacity> */}
       <FlatList
+        refreshing={refreshing}
+        onRefresh={refresh}
+        style={{ width: "100%" }}
         showsVerticalScrollIndicator={false}
         data={data?.seeFeed}
         keyExtractor={(photo) => "" + photo.id}
@@ -43,5 +54,4 @@ const Feed = ({ navigation }) => {
       />
     </ScreenLayout>
   );
-};
-export default Feed;
+}
