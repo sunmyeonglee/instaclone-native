@@ -49,7 +49,7 @@ export default function Feed() {
         <Text style={{ color: "white" }}>Log out</Text>
       </TouchableOpacity>
       <FlatList
-        onEndReachedThreshold={0.5}
+        onEndReachedThreshold={0.3}
         onEndReached={() =>
           fetchMore({
             variables: {
