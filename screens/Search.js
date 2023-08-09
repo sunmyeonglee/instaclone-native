@@ -34,9 +34,9 @@ const MessageText = styled.Text`
 `;
 
 const Input = styled.TextInput`
-  background-color: rgba(255, 255, 255, 1);
-  color: black;
-  width: ${(props) => props.width / 1.5};
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  width: ${(props) => props.width / 1.5}px;
   padding: 5px 10px;
   border-radius: 7px;
 `;
@@ -74,7 +74,13 @@ const Search = ({ navigation }) => {
   }, []);
   console.log(data);
   const renderItem = ({ item: photo }) => (
-    <TouchableOpacity>
+    <TouchableOpacity
+      onPress={() =>
+        navigation.navigate("Photo", {
+          photoId: photo.id,
+        })
+      }
+    >
       <Image
         source={{ uri: photo.file }}
         style={{ width: width / numColumns, height: width / numColumns }}
