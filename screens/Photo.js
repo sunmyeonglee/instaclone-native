@@ -13,7 +13,7 @@ const Photo = ({ navigation }) => {
       }}
     >
       <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
-        <Text style={{ color: "white" }}>Profile</Text>
+        <Text style={{ color: "white" }}>Photo</Text>
       </TouchableOpacity>
     </View>
   );
