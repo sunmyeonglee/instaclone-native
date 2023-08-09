@@ -1,10 +1,11 @@
-import React, { useEffect, useRef } from "react";
+import { gql, useMutation } from "@apollo/client";
+import React, { useRef } from "react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { isLoggedInVar, logUserIn } from "../apollo";
+import AuthButton from "../components/auth/AuthButton";
 import AuthLayout from "../components/auth/AuthLayout";
 import { TextInput } from "../components/auth/AuthShared";
-import { useForm } from "react-hook-form";
-import AuthButton from "../components/auth/AuthButton";
-import { gql, useMutation } from "@apollo/client";
-import { logUserIn } from "../apollo";
 
 const LOGIN_MUTATION = gql`
   mutation login($username: String!, $password: String!) {
@@ -16,7 +17,7 @@ const LOGIN_MUTATION = gql`
   }
 `;
 
-const Login = ({ route: { params } }) => {
+export default function Login({ route: { params } }) {
   const { register, handleSubmit, setValue, watch } = useForm({
     defaultValues: {
       password: params?.password,
@@ -35,7 +36,6 @@ const Login = ({ route: { params } }) => {
   const [logInMutation, { loading }] = useMutation(LOGIN_MUTATION, {
     onCompleted,
   });
-
   const onNext = (nextOne) => {
     nextOne?.current?.focus();
   };
@@ -48,6 +48,7 @@ const Login = ({ route: { params } }) => {
       });
     }
   };
+
   useEffect(() => {
     register("username", {
       required: true,
@@ -56,14 +57,13 @@ const Login = ({ route: { params } }) => {
       required: true,
     });
   }, [register]);
-
   return (
     <AuthLayout>
       <TextInput
         value={watch("username")}
         placeholder="Username"
         returnKeyType="next"
-        autoCapitalize={"none"}
+        autoCapitalize="none"
         placeholderTextColor={"rgba(255, 255, 255, 0.6)"}
         onSubmitEditing={() => onNext(passwordRef)}
         onChangeText={(text) => setValue("username", text)}
@@ -87,6 +87,4 @@ const Login = ({ route: { params } }) => {
       />
     </AuthLayout>
   );
-};
-
-export default Login;
+}

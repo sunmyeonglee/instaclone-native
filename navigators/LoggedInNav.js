@@ -9,7 +9,6 @@ const Tabs = createBottomTabNavigator();
 
 export default function LoggedInNav() {
   const { data } = useMe();
-  console.log(data);
   return (
     <Tabs.Navigator
       screenOptions={{
