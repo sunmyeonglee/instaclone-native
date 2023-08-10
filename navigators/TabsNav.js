@@ -4,7 +4,7 @@ import TabIcon from "../components/nav/TabIcon";
 import SharedStackNav from "./SharedStackNav";
 import { Image, View } from "react-native";
 import useMe from "../hooks/useMe";
-import Upload from "../screens/Upload";
+import SelectPhoto from "../screens/SelectPhoto";
 
 const Tabs = createBottomTabNavigator();
 
@@ -49,7 +49,7 @@ export default function TabsNav() {
           return {
             tabPress: (e) => {
               e.preventDefault();
-              navigation.navigate("Upload");
+              navigation.navigate("SelectPhoto");
             },
           };
         }}
