@@ -50,6 +50,7 @@ export default function SelectPhoto({ navigation }) {
     setChosenPhoto(photos[0]?.uri);
   };
   const getPermissions = async () => {
+    // android: accessPrivileges 없음 => #18.4 참고
     const { accessPrivileges, canAskAgain } =
       await MediaLibrary.getPermissionsAsync();
     if (accessPrivileges === "none" && canAskAgain) {

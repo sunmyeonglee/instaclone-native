@@ -1,7 +1,7 @@
 import { Camera } from "expo-camera";
 import React, { useEffect, useRef, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { Image, Text, TouchableOpacity, StatusBar } from "react-native";
+import { Alert, Image, Text, TouchableOpacity, StatusBar } from "react-native";
 import styled from "styled-components/native";
 import Slider from "@react-native-community/slider";
 import * as MediaLibrary from "expo-media-library";
@@ -45,9 +45,13 @@ const CloseButton = styled.TouchableOpacity`
   left: 20px;
 `;
 
+const PhotoActions = styled(Actions)`
+  flex-direction: row;
+`;
+
 const PhotoAction = styled.TouchableOpacity`
   background-color: white;
-  padding: 5px 10px;
+  padding: 10px 25px;
   border-radius: 4px;
 `;
 const PhotoActionText = styled.Text`
@@ -91,6 +95,25 @@ export default function TakePhoto({ navigation }) {
     }
   };
 
+  const goToUpload = async (save) => {
+    if (save) {
+      await MediaLibrary.saveToLibraryAsync(takenPhoto);
+    }
+    console.log("Will upload", takenPhoto);
+  };
+  const onUpload = () => {
+    Alert.alert("Save photo?", "Save photo & upload or just upload", [
+      {
+        text: "Save & Upload",
+        onPress: () => goToUpload(true),
+      },
+      {
+        text: "Just Upload",
+        onPress: () => goToUpload(false),
+      },
+    ]);
+  };
+
   const onCameraReady = () => {
     setCameraReady(true);
   };
@@ -100,6 +123,8 @@ export default function TakePhoto({ navigation }) {
       const { uri } = await camera.current.takePictureAsync({
         quality: 1,
         exif: true,
+        // for android
+        // skipProcessing: true,
       });
       // if you want to immediately save it:
       // const asset = await MediaLibrary.createAssetAsync(uri);
@@ -137,6 +162,7 @@ export default function TakePhoto({ navigation }) {
               minimumTrackTintColor="#FFFFFF"
               maximumTrackTintColor="rgba(255, 255, 255, 0.5)"
               onValueChange={onZoomValueChange}
+              value={zoom}
             />
           </SliderContainer>
           <ButtonsContainer>
@@ -175,17 +201,14 @@ export default function TakePhoto({ navigation }) {
           </ButtonsContainer>
         </Actions>
       ) : (
-        <Actions>
+        <PhotoActions>
           <PhotoAction onPress={onDismiss}>
             <PhotoActionText>Dismiss</PhotoActionText>
           </PhotoAction>
-          <PhotoAction>
+          <PhotoAction onPress={onUpload}>
             <PhotoActionText>Upload</PhotoActionText>
           </PhotoAction>
-          <PhotoAction>
-            <PhotoActionText>Save & Upload</PhotoActionText>
-          </PhotoAction>
-        </Actions>
+        </PhotoActions>
       )}
     </Container>
   );
