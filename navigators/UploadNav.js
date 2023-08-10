@@ -20,7 +20,6 @@ const UploadNav = () => {
         tabBarIndicatorStyle: { backgroundColor: "white", top: 0 },
       }}
     >
-      <Tab.Screen name="Take" component={TakePhoto} />
       <Tab.Screen name="Select">
         {() => (
           <Stack.Navigator
@@ -37,13 +36,14 @@ const UploadNav = () => {
             }}
           >
             <Stack.Screen
-              name="SelectPhoto"
+              name="ChooseAPhoto"
               options={{ title: "Choose a photo" }}
               component={SelectPhoto}
             />
           </Stack.Navigator>
         )}
       </Tab.Screen>
+      <Tab.Screen name="Take" component={TakePhoto} />
     </Tab.Navigator>
   );
 };

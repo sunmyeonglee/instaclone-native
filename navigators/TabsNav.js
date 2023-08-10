@@ -49,7 +49,7 @@ export default function TabsNav() {
           return {
             tabPress: (e) => {
               e.preventDefault();
-              navigation.navigate("SelectPhoto");
+              navigation.navigate("Upload");
             },
           };
         }}
