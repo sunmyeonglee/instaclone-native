@@ -41,6 +41,7 @@ const HeaderRightText = styled.Text`
 `;
 
 export default function SelectPhoto({ navigation }) {
+  const [photoLocal, setPhotoLocal] = useState("");
   const [ok, setOk] = useState(false);
   const [photos, setPhotos] = useState([]);
   const [chosenPhoto, setChosenPhoto] = useState("");
@@ -64,35 +65,31 @@ export default function SelectPhoto({ navigation }) {
       getPhotos();
     }
   };
-  useEffect(() => {
-    getPermissions();
-  }, []);
 
   const HeaderRight = () => (
     <TouchableOpacity
-      onPress={() =>
-        navigation.navigate("UploadForm", {
-          file: chosenPhoto,
-        })
-      }
+      onPress={() => navigation.navigate("UploadForm", { photoLocal })}
     >
       <HeaderRightText>Next</HeaderRightText>
     </TouchableOpacity>
   );
+  useEffect(() => {
+    getPermissions();
+  }, []);
 
   useEffect(() => {
-    navigation.setOptions({
-      headerRight: HeaderRight,
-    });
-  }, [chosenPhoto]);
+    navigation.setOptions({ headerRight: HeaderRight });
+  }, [chosenPhoto, photoLocal]);
 
   const numColumns = 4;
   const { width } = useWindowDimensions();
-  const choosePhoto = (uri) => {
-    setChosenPhoto(uri);
+  const choosePhoto = async (id) => {
+    const assetInfo = await MediaLibrary.getAssetInfoAsync(id);
+    setPhotoLocal(assetInfo.localUri);
+    setChosenPhoto(assetInfo.uri);
   };
   const renderItem = ({ item: photo }) => (
-    <ImageContainer onPress={() => choosePhoto(photo.uri)}>
+    <ImageContainer onPress={() => choosePhoto(photo.id)}>
       <Image
         source={{ uri: photo.uri }}
         style={{ width: width / numColumns, height: 100 }}
@@ -111,12 +108,12 @@ export default function SelectPhoto({ navigation }) {
     <Container>
       <StatusBar hidden={false} />
       <Top>
-        {chosenPhoto !== "" ? (
+        {chosenPhoto !== "" && (
           <Image
             source={{ uri: chosenPhoto }}
             style={{ width, height: "100%" }}
           />
-        ) : null}
+        )}
       </Top>
       <Bottom>
         <FlatList
