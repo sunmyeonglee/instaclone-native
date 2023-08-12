@@ -104,6 +104,8 @@ export default function SelectPhoto({ navigation }) {
     </ImageContainer>
   );
 
+  console.log(chosenPhoto);
+
   return (
     <Container>
       <StatusBar hidden={false} />

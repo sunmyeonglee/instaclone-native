@@ -65,6 +65,7 @@ export default function Feed() {
         data={data?.seeFeed}
         keyExtractor={(photo) => "" + photo.id}
         renderItem={renderPhoto}
+        disableVirtualization={false} //비정상적인 스크롤 동작을 방지하려고
       />
     </ScreenLayout>
   );

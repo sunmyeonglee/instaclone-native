@@ -104,7 +104,12 @@ const UploadForm = ({ route, navigation }) => {
   return (
     <DismissKeyboard>
       <Container>
-        <Photo resizeMode="contain" source={{ uri: route.params.photoLocal }} />
+        {route.params.photoLocal !== "" && (
+          <Photo
+            resizeMode="contain"
+            source={{ uri: route.params.photoLocal }}
+          />
+        )}
         <CaptionContainer>
           <Caption
             returnKeyType="done"

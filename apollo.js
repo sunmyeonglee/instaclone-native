@@ -23,7 +23,7 @@ export const logUserOut = async () => {
 };
 
 const uploadHttpLink = createUploadLink({
-  uri: "https://55cb-124-5-112-73.ngrok-free.app/graphql",
+  uri: "https://8ef6-220-116-229-224.ngrok-free.app/graphql",
   headers: {
     "apollo-require-preflight": true,
   },
